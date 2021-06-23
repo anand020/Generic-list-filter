@@ -1,0 +1,132 @@
+<div class="dispatch-filters display-flex">
+    <div class="display-flex">
+      <div *ngIf="filterKeys?.length"
+        [ngClass]="(filterKeys.length>2)?'filter-list-container-2 flex-wrap':'filter-list-container-2'">
+        <ng-container *ngIf="isCountClicked">
+          <div class="filter-list" *ngFor="let item of filterKeys;let i = index">
+            <span class="filter-list-data"> {{item | titlecase}} : {{allAppliedFilters[item]}} </span>
+            <span (click)="onRemoveFilter(item)" class="cancle-icon">
+              x
+            </span>
+          </div>
+        </ng-container>
+  
+  
+        <div class="filter-list" *ngIf="!isCountClicked">
+          <span  class="filter-list-data"> {{filterKeys[0] | titlecase}} : {{allAppliedFilters[filterKeys[0]]}} </span>
+          <span (click)="onRemoveFilter(filterKeys[0])" class="cancle-icon">
+            x
+          </span>
+        </div>
+  
+        <div class="filter-list" *ngIf="filterKeys?.length >= 2 && !isCountClicked">
+          <span  class="filter-list-data"> {{filterKeys[1] | titlecase}} : {{allAppliedFilters[filterKeys[1]]}} </span>
+          <span (click)="onRemoveFilter(filterKeys[1])" class="cancle-icon">
+            x
+          </span>
+        </div>
+  
+        <div (click)="openRestAppliedFilters()" class="filter-list cr-ptr"
+          *ngIf="filterKeys.length > 2 && !isCountClicked">
+          +{{filterKeys.length - 2}}
+        </div>
+  
+      </div>
+      <span
+        class="filter-color"
+        (click)="openFilterSideBar()">
+        <i class="fa fa-filter fa-2x icon-margin"></i>
+        <!-- <span *ngIf="totalFilterCount">({{totalFilterCount}})</span>  -->
+      </span>
+    </div>
+  
+    <div *ngIf="openFilterBar" class="filter-position-modal">
+      <div class="modalbody ele">
+        <div>
+          <div class="header-item">
+            <div>
+              Filter
+            </div>
+            <div class="cr-ptr">
+              <span (click)="resetAllFilters()" class="reset-filter">Reset</span>
+              <span (click)="onCancel()"><img class="cancle-icon-1" src="./../../assets/images/crossIcon.png"></span>
+            </div>
+          </div>
+          <hr>
+  
+          <div class="main-body">
+            <div class="side-bar-wrapper">
+              <div class="filter-side-menu">
+                <div 
+                *ngFor="let filter of filterKeys1"  
+                [class.selected]="selectedFilterTabType1 === filter || isFilterExists(filter)"
+                (click)="selectedFilterTab(filter)" class="side-menu-tabs">
+                    {{filter | titlecase}}
+                </div>
+  
+                <div *ngIf="paramList?.fromTime && paramList?.toTime"
+                [class.selected]="selectedFilterTabType1 === 'time' || timeFilter" (click)="selectedFilterTab('time')"
+                class="side-menu-tabs">
+                Select Time
+               </div>
+              </div>
+            </div>
+  
+            <div class="vl"></div>
+  
+            <div class="filter-list-wrapper">
+              <div style="margin-left: 22px;" *ngIf="selectedFilterTabType1 !== 'time'">
+              <input class="filter-search-option" type="text" placeholder="Search {{selectedFilterTabType1}}" matInput
+                [(ngModel)]="searchKey" (keyup)="filterData(searchKey)" />
+             </div>
+              <div  [ngClass]="(list[selectedFilterTabType1]?.length > 6) ? 'filter-data-list-scroll-2 filter-data-list' : 'filter-data-list'">
+                <div 
+                *ngFor="let item of list[selectedFilterTabType1]"
+                class="filter-content"
+                (click)="selectFilter(item,selectedFilterTabType1)"
+                [class.selected]="selectedCategory.value === item"
+                >
+                    {{item}}
+                </div>
+  
+                <div *ngIf="paramList && paramList.selectedTab > 0 && selectedFilterTabType1=='live status'"
+                [ngClass]="(liveStatus?.length > 6) ? 'filter-data-list-scroll-2 filter-data-list' : 'filter-data-list'">
+                <div (click)="selectFilter(item,'live status')" [class.selected]="selectedCategory.value.value === item.value"
+                  *ngFor="let item of liveStatus" class="filter-content">
+                  {{item.name}}
+                </div>
+                </div>
+  
+                <ng-container *ngIf="(paramList && paramList.fromTime) && (paramList && paramList.toTime) && selectedFilterTabType1 === 'time'">
+                  <div *ngIf="selectedFilterTabType === 'time'" class="filter-data-list">
+                    <div class="time-input-wrapper">
+                      <label>From Time</label>
+                      <input matInput class="filter-time-input" [(ngModel)]="fromTime" [ngxTimepicker]="picker2"
+                        placeholder="From Time" readonly>
+                      <ngx-material-timepicker (timeSet)="setTime('fromTime',$event)" #picker2></ngx-material-timepicker>
+                    </div>
+    
+                    <div class="time-input-wrapper">
+                      <label>To Time</label>
+                      <input style="margin-left: 26px;" matInput class="filter-time-input" [(ngModel)]="toTime"
+                        [ngxTimepicker]="picker3" placeholder="To Time" readonly>
+                      <ngx-material-timepicker (timeSet)="setTime('toTime',$event)" #picker3></ngx-material-timepicker>
+                    </div>
+                  </div>
+                </ng-container>
+  
+  
+              </div>
+             
+              <div class="apply-btn">
+                <button (click)="applyFilters()" class="app-btn">
+                  <span>Apply</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

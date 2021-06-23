@@ -1,0 +1,14 @@
+{
+  "name": "generic-list-filter",
+  "version": "0.1.6",
+  "peerDependencies": {
+    "@angular/common": "^10.1.6",
+    "@angular/core": "^10.1.6"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
+    "ngx-material-timepicker": "^5.5.3",
+    "tslib": "^2.0.0"
+  }
+}
